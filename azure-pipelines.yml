@@ -12,9 +12,8 @@ pool:
     projectName: 'spring-boot-kubernetes'
     
 
-
 - task: dependency-check-build-task@6
   inputs:
     projectName: 'spring-boot-kubernetes'
-    scanPath: '''$(Build.ArtifactStagingDirectory)'''
+    scanPath: '$(Build.ArtifactStagingDirectory)'
     format: 'HTML'
