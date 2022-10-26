@@ -21,3 +21,20 @@ steps:
     projectKey: 'rcarozu-DevSecOps_spring-boot-kubernetes'
     projectName: 'spring-boot-kubernetes'
 
+- task: Gradle@3
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    tasks: 'build'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    sonarQubeRunAnalysis: true
+    sqGradlePluginVersionChoice: 'specify'
+    sonarQubeGradlePluginVersion: '3.3'
+    spotBugsAnalysis: false
+
+- task: dependency-check-build-task@6
+  inputs:
+    projectName: 'spring-boot-kubernetes'
+    scanPath: '**/*.java'
+    format: 'HTML'
