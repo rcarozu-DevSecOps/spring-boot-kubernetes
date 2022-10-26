@@ -1,4 +1,4 @@
-steps
+steps:
 - task: SonarCloudPrepare@1
   inputs:
     SonarCloud: 'rcarozu-sonar'
