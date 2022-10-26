@@ -7,3 +7,9 @@ steps:
     projectKey: 'rcarozu-DevSecOps_spring-boot-kubernetes'
     projectName: 'spring-boot-kubernetes'
 
+
+- task: dependency-check-build-task@6
+  inputs:
+    projectName: 'spring-boot-kubernetes'
+    scanPath: '$(Build.SourcesDirectory)/build/libs'
+    format: 'HTML'
