@@ -8,7 +8,7 @@ pool:
     scannerMode: 'MSBuild'
     projectKey: 'rcarozu-DevSecOps_spring-boot-kubernetes'
     projectName: 'spring-boot-kubernetes'
-    
+
 
 - task: dependency-check-build-task@6
   inputs:
