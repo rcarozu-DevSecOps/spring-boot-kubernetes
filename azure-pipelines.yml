@@ -11,5 +11,5 @@ steps:
 - task: dependency-check-build-task@6
   inputs:
     projectName: 'spring-boot-kubernetes'
-    scanPath: '$({WORKSPACE}'/target/*.jar'
+    scanPath: '$({WORKSPACE}/target/*.jar'
     format: 'HTML'
