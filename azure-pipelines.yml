@@ -28,7 +28,7 @@ steps:
     scanPath: '**/*.java'
     format: 'HTML'
 
-  - task: SonarCloudPublish@1
-    inputs:
-      pollingTimeoutSec: '300'
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
     displayName: 'Publish Analysis Results'
