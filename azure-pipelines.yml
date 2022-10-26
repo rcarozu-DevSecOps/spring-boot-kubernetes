@@ -12,8 +12,7 @@ pool:
     effectivePomSkip: false
     sonarQubeRunAnalysis: false
     
-steps:
-- task: SonarCloudPrepare@1
+    - task: SonarCloudPrepare@1
   inputs:
     SonarCloud: 'rcarozu-sonar'
     organization: 'rcarozu-devsecops'
