@@ -1,18 +1,7 @@
 pool:
   vmImage: ubuntu-latest
 
-steps:
-
-- task: Gradle@3
-  inputs:
-    gradleWrapperFile: 'gradlew'
-    tasks: 'build'
-    publishJUnitResults: true
-    testResultsFiles: '**/TEST-*.xml'
-    javaHomeOption: 'JDKVersion'
-    sonarQubeRunAnalysis: false
-    spotBugsAnalysis: false
-    
+  
 
 - task: SonarCloudPrepare@1
   inputs:
@@ -21,22 +10,11 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: 'rcarozu-DevSecOps_spring-boot-kubernetes'
     projectName: 'spring-boot-kubernetes'
+    
 
-
-- task: Gradle@3
-  inputs:
-    gradleWrapperFile: 'gradlew'
-    tasks: 'sonarqube'
-    publishJUnitResults: true
-    testResultsFiles: '**/TEST-*.xml'
-    javaHomeOption: 'JDKVersion'
-    sonarQubeRunAnalysis: true
-    sqGradlePluginVersionChoice: 'specify'
-    sonarQubeGradlePluginVersion: '3.3'
-    spotBugsAnalysis: false
 
 - task: dependency-check-build-task@6
   inputs:
     projectName: 'spring-boot-kubernetes'
-    scanPath: '$(Build.SourcesDirectory)/build/libs'
+    scanPath: '''$(Build.ArtifactStagingDirectory)'''
     format: 'HTML'
