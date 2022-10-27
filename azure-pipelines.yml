@@ -12,7 +12,7 @@ stages:
         inputs:
           mavenPomFile: 'pom.xml'
           publishJUnitResults: true
-          testResultsFiles: '**/surefire-reports/TEST-*.xml'
+          testResultsFiles: '**/surefire-reports/TEST-*.pdf'
           javaHomeOption: 'JDKVersion'
           mavenVersionOption: 'Default'
           mavenAuthenticateFeed: false
@@ -38,7 +38,7 @@ stages:
           inputs:
             mavenPomFile: 'pom.xml'
             publishJUnitResults: true
-            testResultsFiles: '**/surefire-reports/TEST-*.xml'
+            testResultsFiles: '**/surefire-reports/TEST-*.pdf'
             javaHomeOption: 'JDKVersion'
             mavenVersionOption: 'Default'
             mavenAuthenticateFeed: false
@@ -60,7 +60,7 @@ stages:
         inputs:
           mavenPomFile: 'pom.xml'
           publishJUnitResults: true
-          testResultsFiles: '**/surefire-reports/TEST-*.xml'
+          testResultsFiles: '**/surefire-reports/TEST-*.pdf'
           javaHomeOption: 'JDKVersion'
           mavenVersionOption: 'Default'
           mavenAuthenticateFeed: false
