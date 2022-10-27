@@ -27,17 +27,6 @@ stages:
           projectKey: 'rcarozu-DevSecOps_spring-boot-kubernetes'
           projectName: 'spring-boot-kubernetes'
 
-      - task: Gradle@3
-        inputs:
-          gradleWrapperFile: 'gradlew'
-          tasks: 'sonarqube'
-          publishJUnitResults: true
-          testResultsFiles: '**/surefire-reports/TEST-*.xml'
-          javaHomeOption: 'JDKVersion'
-          sonarQubeRunAnalysis: true
-          sqGradlePluginVersionChoice: 'specify'
-          sonarQubeGradlePluginVersion: '3.3'
-          spotBugsAnalysis: false
 
 - stage: SCA 
   jobs:
