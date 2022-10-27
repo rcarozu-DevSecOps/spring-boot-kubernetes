@@ -17,10 +17,20 @@ steps:
   inputs:
     SonarCloud: 'rcarozu-sonar'
     organization: 'rcarozu-devsecops'
-    scannerMode: 'MSBuild'
     projectKey: 'rcarozu-DevSecOps_spring-boot-kubernetes'
     projectName: 'spring-boot-kubernetes'
 
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'pom.xml'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.pdf'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: true
+    sqMavenPluginVersionChoice: 'pom'
 
 - task: dependency-check-build-task@6
   inputs:
