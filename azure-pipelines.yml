@@ -20,10 +20,10 @@ stages:
           sonarQubeRunAnalysis: false
 
       - task: SonarCloudPrepare@1
-
         inputs:
           SonarCloud: 'rcarozu-sonar'
           organization: 'rcarozu-devsecops'
+          scannerMode: 'MSBuild'
           projectKey: 'rcarozu-DevSecOps_spring-boot-kubernetes'
           projectName: 'spring-boot-kubernetes'
 
