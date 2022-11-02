@@ -18,7 +18,7 @@ stages:
         effectivePomSkip: false
         sonarQubeRunAnalysis: false
     
-    
+   
 - stage: SAST 
   jobs:
   - job: sast
@@ -72,7 +72,7 @@ stages:
             scanPath: '$(Pipeline.Workspace)'
             format: 'ALL'
             reportsDirectory: '$(Build.SourcesDirectory)/reports'
-            failOnCVSS: '7'
+#            failOnCVSS: '7'
                    
 - stage: Container_Security 
   jobs:
