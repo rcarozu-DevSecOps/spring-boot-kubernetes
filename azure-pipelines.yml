@@ -45,7 +45,7 @@ stages:
           sqMavenPluginVersionChoice: 'latest'
 
       - task: sonarcloud-buildbreaker@2
-        dispplayName: Quiebre sast
+        displayName: Quiebre sast
         inputs:
           SonarCloud: 'rcarozu-sonar'
           organization: 'rcarozu-devsecops'
