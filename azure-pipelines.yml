@@ -1,44 +1,119 @@
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: Maven@4
-  inputs:
-    mavenPomFile: 'pom.xml'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.pdf'
-    javaHomeOption: 'JDKVersion'
-    mavenVersionOption: 'Default'
-    mavenAuthenticateFeed: false
-    effectivePomSkip: false
-    sonarQubeRunAnalysis: false
+stages:
+- stage: Build 
+  jobs:
+  - job: Build
+    displayName: 'Build'
+    steps:
+    - task: Maven@4
+      inputs:
+        mavenPomFile: 'pom.xml'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        javaHomeOption: 'JDKVersion'
+        mavenVersionOption: 'Default'
+        mavenAuthenticateFeed: false
+        effectivePomSkip: false
+        sonarQubeRunAnalysis: false
+    
+   
+- stage: SAST 
+  jobs:
+  - job: sast
+    displayName: 'SAST'
+    steps:
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: 'rcarozu-sonar'
+          organization: 'rcarozu-devsecops'
+          projectKey: 'rcarozu-DevSecOps_spring-boot-kubernetes'
+          projectName: 'spring-boot-kubernetes'
 
-- task: SonarCloudPrepare@1
-  inputs:
-    SonarCloud: 'rcarozu-sonar'
-    organization: 'rcarozu-devsecops'
-    projectKey: 'rcarozu-DevSecOps_spring-boot-kubernetes'
-    projectName: 'spring-boot-kubernetes'
+      - task: Maven@4
+        inputs:
+          mavenPomFile: 'pom.xml'
+          publishJUnitResults: true
+          testResultsFiles: '**/surefire-reports/TEST-*.xml'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.11'
+          mavenVersionOption: 'Default'
+          mavenAuthenticateFeed: false
+          effectivePomSkip: false
+          sonarQubeRunAnalysis: true
+          sqMavenPluginVersionChoice: 'latest'
 
-- task: Maven@4
-  inputs:
-    mavenPomFile: 'pom.xml'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.pdf'
-    javaHomeOption: 'JDKVersion'
-    mavenVersionOption: 'Default'
-    mavenAuthenticateFeed: false
-    effectivePomSkip: false
-    sonarQubeRunAnalysis: true
-    sqMavenPluginVersionChoice: 'pom'
+      - task: sonarcloud-buildbreaker@2
+        displayName: Quiebre sast
+        inputs:
+          SonarCloud: 'rcarozu-sonar'
+          organization: 'rcarozu-devsecops'
 
-- task: dependency-check-build-task@6
-  inputs:
-    projectName: 'spring-boot-kubernetes'
-    scanPath: '**/*.java'
-    format: 'HTML'
+- stage: SCA 
+  jobs:
+  - job: SCA
+    displayName: 'SCA'
+    steps:
+        - task: Maven@4
+          inputs:
+            mavenPomFile: 'pom.xml'
+            publishJUnitResults: true
+            testResultsFiles: '**/surefire-reports/TEST-*.pdf'
+            javaHomeOption: 'JDKVersion'
+            mavenVersionOption: 'Default'
+            mavenAuthenticateFeed: false
+            effectivePomSkip: false
+            sonarQubeRunAnalysis: false
 
-- task: SonarCloudPublish@1
-  inputs:
-    pollingTimeoutSec: '300'
-    displayName: 'Publish Analysis Results'
+        - task: dependency-check-build-task@6
+          inputs:
+            projectName: 'spring-boot-kubernetes'
+            scanPath: '$(Pipeline.Workspace)'
+            format: 'ALL'
+            reportsDirectory: '$(Build.SourcesDirectory)/reports'
+#            failOnCVSS: '7'
+                   
+- stage: Container_Security 
+  jobs:
+  - job: Container_Security
+    displayName: 'Container Security'
+    steps:
+      - task: Maven@4
+        inputs:
+          mavenPomFile: 'pom.xml'
+          publishJUnitResults: true
+          testResultsFiles: '**/surefire-reports/TEST-*.pdf'
+          javaHomeOption: 'JDKVersion'
+          mavenVersionOption: 'Default'
+          mavenAuthenticateFeed: false
+          effectivePomSkip: false
+          sonarQubeRunAnalysis: false
+      - task: DockerInstaller@0
+        inputs:
+          dockerVersion: '17.09.0-ce'
+      - task: Docker@2
+        inputs:
+          containerRegistry: 'Docker'
+          command: 'login'
+
+      - task: Docker@2
+        inputs:
+          containerRegistry: 'Docker'
+          repository: 'rcarozu/spring-boot-kubernetes'
+          command: 'build'
+          Dockerfile: '**/Dockerfile'
+          tags: 'latest'
+
+      - script: | 
+          sudo apt-get install -y rpm
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.27.1/trivy_0.27.1_Linux-64bit.deb
+          sudo dpkg -i trivy_0.27.1_Linux-64bit.deb
+          trivy image rcarozu/spring-boot-kubernetes:latest
+        displayName: Image Scan
+      - task: Docker@2
+        inputs:
+          containerRegistry: 'Docker'
+          repository: 'rcarozu/spring-boot-kubernetes'
+          command: 'push'
+          tags: 'latest'
