@@ -26,7 +26,7 @@ stages:
     steps:
       - task: SonarCloudPrepare@1
         inputs:
-          SonarCloud: 'devsecops'
+          SonarCloud: 'rcarozu-sonar'
           organization: 'rcarozu-devsecops'
           projectKey: 'rcarozu-DevSecOps_spring-boot-kubernetes'
           projectName: 'spring-boot-kubernetes'
@@ -72,6 +72,7 @@ stages:
             scanPath: '$(Pipeline.Workspace)'
             format: 'ALL'
             reportsDirectory: '$(Build.SourcesDirectory)/reports'
+            failOnCVSS: '7'
                    
 - stage: Container_Security 
   jobs:
