@@ -45,6 +45,7 @@ stages:
           sqMavenPluginVersionChoice: 'latest'
 
       - task: sonarcloud-buildbreaker@2
+        dispplayName: Quiebre sast
         inputs:
           SonarCloud: 'rcarozu-sonar'
           organization: 'rcarozu-devsecops'
@@ -69,7 +70,8 @@ stages:
           inputs:
             projectName: 'spring-boot-kubernetes'
             scanPath: '$(Pipeline.Workspace)'
-            format: 'HTML'
+            format: 'ALL'
+            reportsDirectory: '$(Build.SourcesDirectory)/reports'
                    
 - stage: Container_Security 
   jobs:
